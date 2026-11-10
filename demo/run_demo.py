@@ -17,8 +17,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from provenance import ca, cms, log  # noqa: E402
-from provenance.errors import VerifyError  # noqa: E402
+from provenance import ca, cms, log
+from provenance.errors import VerifyError
 
 OUT = Path(__file__).resolve().parent / "out"
 DOCUMENT = (
@@ -88,9 +88,7 @@ def main() -> None:
     stolen_signature = cms.sign(forged, signer)
     attempt("подделка, подписанная украденным ключом, без списка отзыва",
             lambda: cms.verify(forged, stolen_signature, roots))  # fmt: skip
-    revoked = ca.make_crl(
-        root, [(signer.certificate.serial_number, datetime.now(UTC))], number=2
-    )
+    revoked = ca.make_crl(root, [(signer.certificate.serial_number, datetime.now(UTC))], number=2)
     ca.save_crl(revoked, OUT / "crl_after_theft.pem")
     attempt("та же подделка со свежим списком отзыва",
             lambda: cms.verify(forged, stolen_signature, roots, crl=revoked))  # fmt: skip

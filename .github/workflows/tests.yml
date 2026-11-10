@@ -1,0 +1,29 @@
+name: Проверки
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.12", "3.14"]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Установка uv
+        uses: astral-sh/setup-uv@v7
+      - name: Зависимости
+        run: uv sync --python ${{ matrix.python }}
+      - name: Стиль
+        run: uv run ruff check . && uv run ruff format --check .
+      - name: Тесты
+        # OpenSSL в образе есть: подпись сверяется с ним в обе стороны.
+        run: uv run pytest -q
+      - name: Показ
+        run: uv run python demo/run_demo.py
