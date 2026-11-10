@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+dist/
+*.egg-info/
+uv.lock
+demo/out/
+# Закрытые ключи в репозиторий не попадают
+*.key

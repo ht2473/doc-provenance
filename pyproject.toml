@@ -1,0 +1,53 @@
+[project]
+name = "doc-provenance"
+version = "0.1.0"
+description = "Электронная подпись документов и журнал с подписанной вершиной: свой удостоверяющий центр, CMS, дерево хэшей"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Evgeny Kuzmin" }]
+keywords = ["cms", "pkcs7", "x509", "merkle-tree", "digital-signature"]
+dependencies = [
+    "cryptography>=45.0",
+]
+
+[project.scripts]
+provenance = "provenance.cli:main"
+
+[project.urls]
+Repository = "https://github.com/ht2473/doc-provenance"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/provenance"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "PL", "RUF"]
+ignore = [
+    "RUF001", "RUF002", "RUF003",  # кириллица в строках и комментариях
+    "PLR2004",                     # числа разбора DER названы в комментариях рядом
+    "PLR0913",                     # проверке нужны все её входы
+    "PLR0912", "PLR0915",          # разбор подписи и командной строки читается сверху вниз
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "S603", "S607"]
+"demo/*" = ["S603", "S607", "T201"]
